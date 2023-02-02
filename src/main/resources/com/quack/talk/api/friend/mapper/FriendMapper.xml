@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quack.talk.api.friend.mapper.FriendMapper">
+
+    <insert id="upsertFriendInfo">
+        INSERT INTO tb_q_friends_info (
+            id, phone, email, name,
+            nick_name, image, push_token
+        ) VALUES (
+            #{id}, #{phone}, #{email}, #{name},
+            #{nickName}, #{image}, #{pushToken}
+        ) ON DUPLICATE KEY UPDATE
+            phone = #{phone}, email = #{email}, name = #{name},
+            nick_name = #{nickName}, image = #{image}, push_token = #{pushToken}
+    </insert>
+
+    <select id="findAll" resultType="com.quack.talk.common.friend.entity.Friend">
+        SELECT
+            info.id,
+            info.phone,
+            info.email,
+            info.name,
+            info.nick_name,
+            info.image,
+            info.push_token
+        FROM tb_q_friends friend
+             JOIN tb_q_friends_info info
+             ON friend.friend_id = info.id
+        WHERE
+            friend.user_id = #{myId}
+    </select>
+
+    <select id="findFriendWithRequestStatus" resultType="com.quack.talk.common.friend.entity.Friend">
+        SELECT
+            info.id,
+            info.phone,
+            info.email,
+            info.name,
+            info.nick_name,
+            info.image,
+            info.push_token,
+            status.status as request_status
+        FROM tb_q_friends_info info
+        LEFT JOIN tb_q_friends_status status
+            ON info.id = status.friend_id
+            AND status.user_id = #{myId}
+        WHERE
+            info.id = #{friendId}
+        ORDER BY
+            status.create_time desc
+        LIMIT 1
+    </select>
+
+    <select id="findFriendByEmail" resultType="com.quack.talk.common.friend.entity.Friend">
+        SELECT
+            info.id,
+            info.phone,
+            info.email,
+            info.name,
+            info.nick_name,
+            info.image,
+            info.push_token
+        FROM tb_q_friends_info info
+        WHERE
+            info.email = #{email}
+    </select>
+
+    <insert id="insertFriendStatus">
+        INSERT INTO tb_q_friends_status (
+            user_id,
+            friend_id,
+            status
+        ) VALUES (
+            #{myId},
+            #{friendId},
+            #{status}
+        )
+    </insert>
+
+    <insert id="insertFriendBoth">
+        INSERT INTO tb_q_friends (
+            user_id,
+            friend_id
+        ) VALUES
+            (#{myId}, #{friendId}),
+            (#{friendId}, #{myId})
+    </insert>
+
+    <insert id="insertFriendStatusBoth">
+        INSERT INTO tb_q_friends_status (
+            user_id,
+            friend_id,
+            status
+        ) VALUES
+            (#{myId}, #{friendId}, #{status}),
+            (#{friendId}, #{myId}, #{status})
+    </insert>
+
+
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quack.talk.api.tag.mapper.TagMapper">
+
+    <select id="findRecommendTags" resultType="com.quack.talk.common.tag.entity.Tag">
+        SELECT
+            seq,
+            tag,
+            type,
+            status,
+            create_time
+        FROM tag_recommend
+        WHERE
+            type = #{type}
+            AND status = 100
+    </select>
+
+
+</mapper>
