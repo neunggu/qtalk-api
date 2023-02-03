@@ -1,7 +1,7 @@
 package com.quack.talk.api.room.service;
 
-import com.quack.talk.api.room.dto.fcm.SubscriptionRequestDto;
 import com.quack.talk.api.room.repository.RoomRepository;
+import com.quack.talk.common.fcm.dto.SubscriptionRequestDto;
 import com.quack.talk.common.util.ApiUtil;
 import com.quack.talk.common.util.FcmUtil;
 import lombok.RequiredArgsConstructor;
